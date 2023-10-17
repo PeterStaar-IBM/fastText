@@ -6,7 +6,8 @@
 # LICENSE file in the root directory of this source tree.
 #
 
-cmake_minimum_required(VERSION 2.8.9)
+#cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.0.0)
 project(fasttext)
 
 # The version number.
@@ -15,7 +16,16 @@ set (fasttext_VERSION_MINOR 1)
 
 include_directories(fasttext)
 
-set(CMAKE_CXX_FLAGS " -pthread -std=c++11 -funroll-loops -O3 -march=native")
+#set(CMAKE_CXX_FLAGS " -pthread -std=c++11 -funroll-loops -O3 -march=native")
+#set(CMAKE_CXX_FLAGS " -pthread -std=c++11")
+
+if(NOT DEFINED CMAKE_CXX_FLAGS)
+    set(CMAKE_CXX_FLAGS "-pthread -std=c++11" CACHE STRING "C++ Compiler Flags" FORCE)
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11" CACHE STRING "C++ Compiler Flags" FORCE)
+endif()
+
+message(STATUS "FastText CXX flags: " ${CMAKE_CXX_FLAGS})
 
 set(HEADER_FILES
     src/args.h
