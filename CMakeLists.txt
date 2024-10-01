@@ -78,11 +78,11 @@ add_executable(fasttext-bin src/main.cc)
 target_link_libraries(fasttext-bin pthread fasttext-static)
 set_target_properties(fasttext-bin PROPERTIES PUBLIC_HEADER "${HEADER_FILES}" OUTPUT_NAME fasttext)
 install (TARGETS fasttext-shared
-    LIBRARY DESTINATION lib)
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install (TARGETS fasttext-static
-    ARCHIVE DESTINATION lib)
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install (TARGETS fasttext-static_pic
-    ARCHIVE DESTINATION lib)
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install (TARGETS fasttext-bin
-    RUNTIME DESTINATION bin
- PUBLIC_HEADER DESTINATION include/fasttext)
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fasttext)
