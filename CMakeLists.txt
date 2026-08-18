@@ -19,10 +19,20 @@ include_directories(fasttext)
 #set(CMAKE_CXX_FLAGS " -pthread -std=c++11 -funroll-loops -O3 -march=native")
 #set(CMAKE_CXX_FLAGS " -pthread -std=c++11")
 
-if(NOT DEFINED CMAKE_CXX_FLAGS)
-    set(CMAKE_CXX_FLAGS "-pthread -std=c++11" CACHE STRING "C++ Compiler Flags" FORCE)
+if(MSVC)
+    # cl.exe understands neither -pthread nor -std=c++11: threading comes from
+    # the CRT and C++14 is already the MSVC baseline. /EHsc selects the standard
+    # C++ exception model. Without this, configuring with the Visual Studio
+    # generator fails outright, which blocks Windows ARM64 builds.
+    set(FASTTEXT_BASE_CXX_FLAGS "/EHsc")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11" CACHE STRING "C++ Compiler Flags" FORCE)
+    set(FASTTEXT_BASE_CXX_FLAGS "-pthread -std=c++11")
+endif()
+
+if(NOT DEFINED CMAKE_CXX_FLAGS)
+    set(CMAKE_CXX_FLAGS "${FASTTEXT_BASE_CXX_FLAGS}" CACHE STRING "C++ Compiler Flags" FORCE)
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FASTTEXT_BASE_CXX_FLAGS}" CACHE STRING "C++ Compiler Flags" FORCE)
 endif()
 
 message(STATUS "FastText CXX flags: " ${CMAKE_CXX_FLAGS})
