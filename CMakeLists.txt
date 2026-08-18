@@ -85,7 +85,13 @@ set_target_properties(fasttext-static PROPERTIES OUTPUT_NAME fasttext)
 set_target_properties(fasttext-static_pic PROPERTIES OUTPUT_NAME fasttext_pic
   POSITION_INDEPENDENT_CODE True)
 add_executable(fasttext-bin src/main.cc)
-target_link_libraries(fasttext-bin pthread fasttext-static)
+if(MSVC)
+    # There is no pthread.lib for MSVC (threading comes from the CRT), and
+    # linking it fails with "LNK1181: cannot open input file 'pthread.lib'".
+    target_link_libraries(fasttext-bin fasttext-static)
+else()
+    target_link_libraries(fasttext-bin pthread fasttext-static)
+endif()
 set_target_properties(fasttext-bin PROPERTIES PUBLIC_HEADER "${HEADER_FILES}" OUTPUT_NAME fasttext)
 install (TARGETS fasttext-shared
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
